@@ -1,0 +1,60 @@
+<!-- Bind form to todoForm -->
+<!-- processForm() triggered upon submit form event -->
+<form [formGroup]="todoForm" (ngSubmit)="processForm()">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>
+                <!-- formControlName links input to the name in todo.component -->
+                <input type="text" placeholder="Name" size="30" formControlName="name">
+                <!-- Validators: Required => Returns true if invalid (i.e. no name) -->
+                <!-- Returns true if 'name' field has been written on -->
+                <div *ngIf="todoForm.get('name')?.invalid && todoForm.get('name')?.dirty">
+                    Please enter your name
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>
+                <input type="email" placeholder="Email" size="30" formControlName="email">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" (click)="clearForm()">Clear</button>
+                <button type="submit" [disabled]="invalid()">Save</button>
+                <button type="button" (click)="addTask()">Add TODO</button>
+            </td>
+        </tr>
+    </table>
+
+    <table *ngIf="taskArray.controls.length > 0">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <!-- formArrayName links input and select to tasks in todo.component -->
+        <tbody formArrayName="tasks">
+            <!-- Each input + select is a taskArray control -->
+            <!-- Give an index for each control -->
+            <tr *ngFor="let t of taskArray.controls; let i = index" [formGroupName]="i">
+                <td>
+                    <input type="text" size="30" placeholder="Task" formControlName="task">
+                </td>
+                <td>
+                    <select formControlName="priority">
+                        <option value="low">Low</option>
+                        <option value="med">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" (click)="removeTask(i)">X</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
